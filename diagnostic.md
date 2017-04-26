@@ -5,7 +5,7 @@ Place your responses inside the fenced code-blocks where indivated by comments.
 1.  Describe a reason why a join tables may be valuable.
 
   ```md
-    # < Your Response Here >
+It allows you to extract data from multiple tables that have relationships.
   ```
 
 1.  Provide a database table structure and explain the Entity Relationship that
@@ -15,23 +15,36 @@ Place your responses inside the fenced code-blocks where indivated by comments.
   join table with references to `Movies` and `Profiles`.
 
   ```md
-    # < Your Response Here >
+Profiles to Favorites - One to Many relationship
+Movies to Favorites - Many to many relationship
+
+Profile - Columns: given_name, surname, email
+Movies - Columns: title, release_date, length
+Favorites - Columns: Movies, Profiles
+
   ```
 
 1.  For the above example, what needs to be added to the Model files?
 
   ```rb
   class Profile < ActiveRecord::Base
+  has_many :movies, through: :favorites
+  has_many :favorites
   end
   ```
 
   ```rb
   class Movie < ActiveRecord::Base
+  has_many:profiles, through :favorites
+  has_many:favorites
+
   end
   ```
 
   ```rb
   class Favorite < ActiveRecord::Base
+  has_many :movies
+  has_many :profiles
   end
   ```
 
@@ -40,11 +53,18 @@ like to show all movies favorited by a profile on
 `http://localhost:3000/profiles/1`
 
   ```md
-    # < Your Response Here >
+The Serializer allows you to control the format that your data is returned and shown
+in the browser.
   ```
 
   ```rb
   class ProfileSerializer < ActiveModel::Serializer
+    attributes :id
+    has_manu :
+  attributes :id, :date
+  has_one :doctor
+  has_one :patient
+
   end
   ```
 
@@ -52,13 +72,17 @@ like to show all movies favorited by a profile on
 the above `Movies` and `Profiles`.
 
   ```sh
-    # < Your Response Here >
+generate scaffold Favorite profile:references movie:references
   ```
 
 1.  What is `Dependent: Destroy` and where/why would we use it?
 
   ```md
-    # < Your Response Here >
+It tells tells the table to destroy the dependent item in the join table if the item
+in the model tied to that dependent item in the join table is destroyed. In this case, we would
+put it in the movie or profie models. For the profile model, it might look something like this:
+has_many :favorites, dependent: :destroy
+
   ```
 
 1.  Think of **ANY** example where you would have a one-to-many relationship as well
@@ -66,5 +90,4 @@ as a many-to-many relationship in an application. You only need to list the
 description about the resources and how they relate to one another.
 
   ```md
-    # < Your Response Here >
   ```
